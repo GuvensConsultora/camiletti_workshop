@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_workshop_bay_list" model="ir.ui.view">
+        <field name="name">workshop.bay.list</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <list string="Bahías">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="bay_type"/>
+                <field name="capacity"/>
+                <field name="default_technician_id"/>
+                <field name="state"
+                       decoration-success="state == 'available'"
+                       decoration-warning="state == 'busy'"
+                       decoration-info="state == 'maintenance'"
+                       decoration-muted="state == 'closed'"
+                       widget="badge"/>
+                <field name="active_order_count" string="OTs activas"/>
+                <field name="is_occupied" widget="boolean_toggle" readonly="1"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_workshop_bay_form" model="ir.ui.view">
+        <field name="name">workshop.bay.form</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <form string="Bahía">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="available,busy,maintenance,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivada" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Ej. Elevador 1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identidad">
+                            <field name="code" placeholder="Ej. EL1"/>
+                            <field name="sequence"/>
+                            <field name="bay_type"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Capacidad y equipamiento">
+                            <field name="capacity"/>
+                            <field name="max_vehicle_weight"/>
+                            <field name="equipment_description"
+                                   placeholder="Ej. Elevador 2 columnas 3500kg; alineadora Hunter PA200"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Personal">
+                            <field name="default_technician_id"
+                                   options="{'no_create': True}"/>
+                            <field name="technician_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Ocupación">
+                            <field name="active_order_count"/>
+                            <field name="is_occupied"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="OTs asignadas" name="orders">
+                            <field name="current_order_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="vehicle_id"/>
+                                    <field name="license_plate"/>
+                                    <field name="technician_id"/>
+                                    <field name="workshop_state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Particularidades, calibraciones pendientes, etc."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_workshop_bay_kanban" model="ir.ui.view">
+        <field name="name">workshop.bay.kanban</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="state"/>
+                <field name="color"/>
+                <field name="active_order_count"/>
+                <field name="capacity"/>
+                <field name="is_occupied"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="d-flex justify-content-between">
+                                <strong><field name="code"/> — <field name="name"/></strong>
+                                <span class="badge text-bg-light">
+                                    <field name="bay_type"/>
+                                </span>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                <i class="fa fa-car me-1"/>
+                                <field name="active_order_count"/> / <field name="capacity"/> OTs
+                            </div>
+                            <div t-if="record.default_technician_id.raw_value" class="small mt-1">
+                                <i class="fa fa-user-circle me-1"/>
+                                <field name="default_technician_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_workshop_bay_search" model="ir.ui.view">
+        <field name="name">workshop.bay.search</field>
+        <field name="model">workshop.bay</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="bay_type"/>
+                <field name="default_technician_id"/>
+                <filter name="available" string="Disponibles"
+                        domain="[('state','=','available')]"/>
+                <filter name="busy" string="Ocupadas"
+                        domain="[('state','=','busy')]"/>
+                <filter name="maintenance" string="En mantenimiento"
+                        domain="[('state','=','maintenance')]"/>
+                <filter name="archived" string="Archivadas"
+                        domain="[('active','=',False)]"/>
+                <group>
+                    <filter name="group_type" string="Tipo"
+                            context="{'group_by': 'bay_type'}"/>
+                    <filter name="group_state" string="Estado"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_workshop_bay" model="ir.actions.act_window">
+        <field name="name">Bahías</field>
+        <field name="res_model">workshop.bay</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_workshop_bay_search"/>
+    </record>
+
+</odoo>

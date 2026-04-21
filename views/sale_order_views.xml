@@ -118,6 +118,9 @@
                 <field name="technician_id"
                        options="{'no_create': True}"
                        required="workshop_state in ('diagnosis','in_repair','ready','delivered')"/>
+                <field name="bay_id"
+                       options="{'no_create': True}"
+                       required="workshop_state in ('in_repair','ready')"/>
             </xpath>
 
             <!-- Campos del taller en líneas: DOT, posición, terminado -->
@@ -173,6 +176,7 @@
                 <field name="vehicle_id"/>
                 <field name="partner_id"/>
                 <field name="technician_id"/>
+                <field name="bay_id"/>
                 <field name="amount_total"/>
                 <field name="customer_approved"/>
                 <field name="currency_id"/>
@@ -193,6 +197,10 @@
                                 <span t-if="record.technician_id.raw_value">
                                     <i class="fa fa-user-circle me-1"/>
                                     <field name="technician_id"/>
+                                </span>
+                                <span t-if="record.bay_id.raw_value" class="badge text-bg-secondary">
+                                    <i class="fa fa-map-marker me-1"/>
+                                    <field name="bay_id"/>
                                 </span>
                                 <span class="fw-bold">
                                     <field name="amount_total" widget="monetary"/>
@@ -224,6 +232,7 @@
                 <field name="partner_id"/>
                 <field name="vehicle_id"/>
                 <field name="technician_id"/>
+                <field name="bay_id"/>
                 <filter name="in_progress" string="En curso"
                         domain="[('workshop_state','in',['received','diagnosis','quoted','in_repair','ready'])]"/>
                 <filter name="waiting_approval" string="Esperando aprobación"
@@ -242,6 +251,8 @@
                             context="{'group_by': 'workshop_state'}"/>
                     <filter name="group_tech" string="Técnico"
                             context="{'group_by': 'technician_id'}"/>
+                    <filter name="group_bay" string="Bahía"
+                            context="{'group_by': 'bay_id'}"/>
                     <filter name="group_partner" string="Cliente"
                             context="{'group_by': 'partner_id'}"/>
                 </group>

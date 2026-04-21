@@ -35,4 +35,10 @@
               parent="menu_workshop_config"
               action="product.product_template_action"
               sequence="10"/>
+
+    <menuitem id="menu_workshop_config_bays"
+              name="Bahías"
+              parent="menu_workshop_config"
+              action="action_workshop_bay"
+              sequence="20"/>
 </odoo>

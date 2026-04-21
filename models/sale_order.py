@@ -62,6 +62,10 @@ class SaleOrder(models.Model):
         "res.users", string="Técnico asignado",
         domain="[('share','=',False)]", tracking=True)
 
+    bay_id = fields.Many2one(
+        "workshop.bay", string="Bahía", tracking=True, index=True,
+        help="Puesto físico del taller donde se realiza el trabajo.")
+
     inspection_id = fields.Many2one(
         "workshop.inspection", string="Inspección DVI",
         copy=False, ondelete="set null", tracking=True,
