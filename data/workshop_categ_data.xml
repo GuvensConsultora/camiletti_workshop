@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Categoría de producto "Neumáticos" para detección automática del DOT.
+         Si ya existe, no se duplica. -->
+    <record id="product_categ_tires" model="product.category">
+        <field name="name">Neumáticos</field>
+        <field name="parent_id" ref="product.product_category_goods"/>
+    </record>
+</odoo>

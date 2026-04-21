@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_workshop_root"
+              name="Taller"
+              sequence="40"
+              web_icon="camiletti_workshop,static/description/icon.png"
+              groups="camiletti_workshop.group_workshop_reception"/>
+
+    <menuitem id="menu_workshop_orders"
+              name="Órdenes de Taller"
+              parent="menu_workshop_root"
+              action="action_workshop_orders"
+              sequence="10"/>
+
+    <menuitem id="menu_workshop_vehicles"
+              name="Vehículos"
+              parent="menu_workshop_root"
+              action="action_workshop_vehicle"
+              sequence="20"/>
+
+    <menuitem id="menu_workshop_config"
+              name="Configuración"
+              parent="menu_workshop_root"
+              sequence="90"
+              groups="camiletti_workshop.group_workshop_manager"/>
+
+    <menuitem id="menu_workshop_config_products"
+              name="Productos y Servicios"
+              parent="menu_workshop_config"
+              action="product.product_template_action"
+              sequence="10"/>
+</odoo>

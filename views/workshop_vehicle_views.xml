@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ════════════════════ FORM ════════════════════ -->
+    <record id="view_workshop_vehicle_form" model="ir.ui.view">
+        <field name="name">workshop.vehicle.form</field>
+        <field name="model">workshop.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehículo">
+                <header>
+                    <button name="action_new_service_order" type="object"
+                            string="➕ Nueva OT" class="oe_highlight"
+                            groups="camiletti_workshop.group_workshop_reception"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_service_orders" type="object"
+                                class="oe_stat_button" icon="fa-wrench">
+                            <field name="service_order_count" widget="statinfo"
+                                   string="OTs"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archivado"
+                            bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="license_plate" string="Patente"/>
+                        <h1>
+                            <field name="license_plate" placeholder="AAA123 o AA123AA"
+                                   style="text-transform: uppercase"/>
+                        </h1>
+                        <field name="display_name" invisible="1"/>
+                    </div>
+                    <group>
+                        <group string="Titular">
+                            <field name="partner_id"
+                                   options="{'no_create_edit': False}"/>
+                            <field name="vehicle_type"/>
+                        </group>
+                        <group string="Identificación">
+                            <field name="brand" placeholder="Ford, Toyota, VW..."/>
+                            <field name="model" placeholder="Hilux, Focus, Gol..."/>
+                            <field name="year" placeholder="2020"/>
+                            <field name="color"/>
+                            <field name="fuel_type"/>
+                        </group>
+                        <group string="Servicio">
+                            <field name="odometer"/>
+                            <field name="last_service_date" readonly="1"/>
+                        </group>
+                        <group string="Chasis">
+                            <field name="vin_sn" placeholder="17 caracteres (opcional)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Historial de OTs" name="history">
+                            <field name="service_order_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date_order"/>
+                                    <field name="workshop_state" widget="badge"
+                                           decoration-success="workshop_state == 'delivered'"
+                                           decoration-info="workshop_state in ('received','diagnosis')"
+                                           decoration-warning="workshop_state == 'quoted'"
+                                           decoration-muted="workshop_state == 'cancelled'"/>
+                                    <field name="amount_total" widget="monetary"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="notes" placeholder="Particularidades del vehículo..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ════════════════════ LIST ════════════════════ -->
+    <record id="view_workshop_vehicle_list" model="ir.ui.view">
+        <field name="name">workshop.vehicle.list</field>
+        <field name="model">workshop.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="Vehículos">
+                <field name="license_plate" string="Patente"/>
+                <field name="partner_id"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="year"/>
+                <field name="vehicle_type"/>
+                <field name="odometer" string="Km"/>
+                <field name="last_service_date"/>
+                <field name="service_order_count" string="OTs"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ════════════════════ KANBAN ════════════════════ -->
+    <record id="view_workshop_vehicle_kanban" model="ir.ui.view">
+        <field name="name">workshop.vehicle.kanban</field>
+        <field name="model">workshop.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban class="o_workshop_vehicle_kanban">
+                <field name="license_plate"/>
+                <field name="partner_id"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="vehicle_type"/>
+                <field name="service_order_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card_header p-2">
+                            <strong class="fs-5">
+                                <field name="license_plate"/>
+                            </strong>
+                        </div>
+                        <div class="o_kanban_card_content px-2 pb-2">
+                            <div><field name="partner_id"/></div>
+                            <div class="text-muted">
+                                <field name="brand"/> <field name="model"/>
+                                <span invisible="not year"> · <field name="year"/></span>
+                            </div>
+                            <div class="mt-1">
+                                <span class="badge text-bg-light">
+                                    <i class="fa fa-wrench"/> <field name="service_order_count"/> OTs
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ════════════════════ SEARCH ════════════════════ -->
+    <record id="view_workshop_vehicle_search" model="ir.ui.view">
+        <field name="name">workshop.vehicle.search</field>
+        <field name="model">workshop.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Vehículos">
+                <field name="license_plate"/>
+                <field name="partner_id"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="vin_sn"/>
+                <filter string="Autos" name="type_auto"
+                        domain="[('vehicle_type','=','auto')]"/>
+                <filter string="Camionetas" name="type_camioneta"
+                        domain="[('vehicle_type','=','camioneta')]"/>
+                <filter string="Camiones" name="type_camion"
+                        domain="[('vehicle_type','=','camion')]"/>
+                <separator/>
+                <filter string="Archivados" name="archived"
+                        domain="[('active','=',False)]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Cliente" name="group_partner"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter string="Tipo" name="group_type"
+                            context="{'group_by': 'vehicle_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_workshop_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehículos de Clientes</field>
+        <field name="res_model">workshop.vehicle</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cargá tu primer vehículo
+            </p>
+            <p>
+                Acá vive la ficha de cada auto, camioneta o camión que pasa por
+                el taller, con patente, dueño y el historial completo de OTs.
+            </p>
+        </field>
+    </record>
+</odoo>

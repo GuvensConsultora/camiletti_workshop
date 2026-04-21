@@ -1,0 +1,128 @@
+/*
+ * Camiletti Taller — UX neurociencia.
+ *
+ * Principios aplicados:
+ * 1. Von Restorff: UNA acción primaria destacada por pantalla (o_workshop_cta).
+ * 2. Color semántico por etapa (no decorativo; comunica estado).
+ * 3. Ley de Fitts: CTAs grandes y con espacio alrededor.
+ * 4. Carga cognitiva reducida: banner contextual + "qué hacer ahora".
+ * 5. Feedback visual inmediato: progress bar, highlight en estado actual.
+ */
+
+// ═══ Paleta semántica por estado ═══
+// Recibido        → gris neutro (foco: tomar datos)
+// Diagnóstico     → celeste    (foco: investigar)
+// Presupuestado   → ámbar      (foco: esperar cliente)
+// En reparación   → naranja    (foco: trabajar)
+// Listo           → verde      (foco: avisar cliente)
+// Entregado       → teal       (logro, cerrado)
+// Cancelado       → rojo apagado
+
+$ws-received: #6c757d;
+$ws-diagnosis: #0dcaf0;
+$ws-quoted: #ffc107;
+$ws-in-repair: #fd7e14;
+$ws-ready: #198754;
+$ws-delivered: #20c997;
+$ws-cancelled: #adb5bd;
+
+// ═══ Banner de ayuda contextual ═══
+.o_workshop_helper {
+    font-size: 1rem;
+    padding: 0.9rem 1.1rem;
+    border-left: 4px solid currentColor;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+
+    b {
+        font-size: 1.05rem;
+    }
+
+    .progress {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+// ═══ CTA primario destacado (Von Restorff) ═══
+.o_workshop_cta {
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.55rem 1.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: all 0.15s ease;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    }
+}
+
+// ═══ Statusbar del taller ═══
+.o_statusbar_status {
+    .o_arrow_button[data-value='received']      { --ws-color: #{$ws-received}; }
+    .o_arrow_button[data-value='diagnosis']     { --ws-color: #{$ws-diagnosis}; }
+    .o_arrow_button[data-value='quoted']        { --ws-color: #{$ws-quoted}; }
+    .o_arrow_button[data-value='in_repair']     { --ws-color: #{$ws-in-repair}; }
+    .o_arrow_button[data-value='ready']         { --ws-color: #{$ws-ready}; }
+    .o_arrow_button[data-value='delivered']     { --ws-color: #{$ws-delivered}; }
+}
+
+// ═══ Kanban del taller ═══
+.o_workshop_kanban {
+
+    .o_kanban_group {
+        min-width: 290px;
+    }
+
+    // Header de cada columna coloreado según etapa
+    .o_kanban_header[data-id='received']    { border-top: 4px solid $ws-received; }
+    .o_kanban_header[data-id='diagnosis']   { border-top: 4px solid $ws-diagnosis; }
+    .o_kanban_header[data-id='quoted']      { border-top: 4px solid $ws-quoted; }
+    .o_kanban_header[data-id='in_repair']   { border-top: 4px solid $ws-in-repair; }
+    .o_kanban_header[data-id='ready']       { border-top: 4px solid $ws-ready; }
+    .o_kanban_header[data-id='delivered']   { border-top: 4px solid $ws-delivered; }
+    .o_kanban_header[data-id='cancelled']   { border-top: 4px solid $ws-cancelled; opacity: 0.7; }
+}
+
+// Tarjeta del taller
+.o_workshop_card {
+    padding: 0.9rem;
+    border-radius: 6px;
+    border-left: 4px solid transparent;
+    background: #fff;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .o_workshop_plate {
+        font-size: 1.1rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .o_workshop_customer {
+        font-style: italic;
+    }
+
+    .o_workshop_progress_bar {
+        background-color: currentColor;
+    }
+
+    // Color del borde izquierdo según estado
+    &.o_workshop_card_received    { border-left-color: $ws-received;    color: $ws-received; }
+    &.o_workshop_card_diagnosis   { border-left-color: $ws-diagnosis;   color: $ws-diagnosis; }
+    &.o_workshop_card_quoted      { border-left-color: $ws-quoted;      color: darken($ws-quoted, 15%); }
+    &.o_workshop_card_in_repair   { border-left-color: $ws-in-repair;   color: $ws-in-repair; }
+    &.o_workshop_card_ready       { border-left-color: $ws-ready;       color: $ws-ready; }
+    &.o_workshop_card_delivered   { border-left-color: $ws-delivered;   color: $ws-delivered; opacity: 0.85; }
+    &.o_workshop_card_cancelled   { border-left-color: $ws-cancelled;   color: $ws-cancelled; opacity: 0.6; }
+}
+
+// ═══ Ficha del vehículo ═══
+.o_workshop_vehicle_kanban {
+    .o_kanban_card_header {
+        border-bottom: 1px solid #eee;
+    }
+}

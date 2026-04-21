@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_workshop_vehicle_reception,workshop.vehicle reception,model_workshop_vehicle,group_workshop_reception,1,1,1,0
+access_workshop_vehicle_technician,workshop.vehicle technician,model_workshop_vehicle,group_workshop_technician,1,0,0,0
+access_workshop_vehicle_manager,workshop.vehicle manager,model_workshop_vehicle,group_workshop_manager,1,1,1,1
