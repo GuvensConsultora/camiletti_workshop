@@ -62,6 +62,12 @@ class SaleOrder(models.Model):
         "res.users", string="Técnico asignado",
         domain="[('share','=',False)]", tracking=True)
 
+    inspection_id = fields.Many2one(
+        "workshop.inspection", string="Inspección DVI",
+        copy=False, ondelete="set null", tracking=True,
+        help="Inspección vehicular digital asociada a esta OT. "
+             "Se crea automáticamente al pasar la OT a Diagnóstico.")
+
     # ────── Flags de control (guards) ──────
     customer_approved = fields.Boolean(
         string="Aprobación cliente registrada", copy=False, tracking=True,
