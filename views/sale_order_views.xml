@@ -13,94 +13,80 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Botonera contextual del taller, antes de los botones nativos -->
+            <!-- Declarar TODOS los campos del taller primero, así las expresiones
+                 invisible/readonly de botones y bloques posteriores pueden
+                 referenciarlos sin error de validación (Odoo 17+ estricto). -->
             <xpath expr="//header" position="inside">
-                <!-- Recepción → Diagnóstico -->
+                <field name="workshop_state" widget="statusbar"
+                       statusbar_visible="received,diagnosis,quoted,in_repair,ready,delivered"
+                       options="{'clickable': false}"/>
+                <field name="customer_approved" invisible="1"/>
+                <field name="workshop_progress" invisible="1"/>
+                <field name="workshop_color" invisible="1"/>
+                <field name="workshop_next_action" invisible="1"/>
+                <field name="workshop_helper" invisible="1"/>
+
+                <!-- Botones contextuales del taller -->
                 <button name="action_workshop_start_diagnosis"
                         type="object"
-                        string="🔍 Iniciar Diagnóstico"
+                        string="Iniciar Diagnóstico"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state != 'received'"
                         groups="camiletti_workshop.group_workshop_reception"/>
-
-                <!-- Recepción/Diagnóstico → Presupuestado -->
                 <button name="action_workshop_to_quote"
                         type="object"
-                        string="💰 Pasar a Presupuesto"
+                        string="Pasar a Presupuesto"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state not in ('received','diagnosis')"
                         groups="camiletti_workshop.group_workshop_reception"/>
-
-                <!-- Registro de aprobación -->
                 <button name="action_workshop_register_approval"
                         type="object"
-                        string="✓ Registrar Aprobación"
+                        string="Registrar Aprobación"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state != 'quoted' or customer_approved"
                         groups="camiletti_workshop.group_workshop_reception"/>
-
-                <!-- Presupuestado → En reparación -->
                 <button name="action_workshop_start_repair"
                         type="object"
-                        string="🔧 Empezar Reparación"
+                        string="Empezar Reparación"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state != 'quoted' or not customer_approved"/>
-
-                <!-- En reparación → Listo -->
                 <button name="action_workshop_mark_ready"
                         type="object"
-                        string="✅ Marcar Listo"
+                        string="Marcar Listo"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state != 'in_repair'"
                         groups="camiletti_workshop.group_workshop_technician"/>
-
-                <!-- Listo → Entregado -->
                 <button name="action_workshop_deliver"
                         type="object"
-                        string="🏁 Entregar y Facturar"
+                        string="Entregar y Facturar"
                         class="btn-primary o_workshop_cta"
                         invisible="workshop_state != 'ready'"
                         groups="camiletti_workshop.group_workshop_reception"/>
-
-                <!-- Cancelar (escondido en la derecha, no destacado) -->
                 <button name="action_workshop_cancel"
                         type="object"
                         string="Cancelar OT"
                         class="btn-secondary"
-                        confirm="¿Confirmás cancelar esta OT?"
+                        confirm="Confirmas cancelar esta OT?"
                         invisible="workshop_state in ('delivered','cancelled')"
                         groups="camiletti_workshop.group_workshop_manager"/>
-
-                <!-- Reabrir cancelada -->
                 <button name="action_workshop_reopen"
                         type="object"
-                        string="↺ Reabrir"
+                        string="Reabrir"
                         class="btn-secondary"
                         invisible="workshop_state != 'cancelled'"
                         groups="camiletti_workshop.group_workshop_manager"/>
-
-                <!-- Statusbar visual (stepper del taller) -->
-                <field name="workshop_state" widget="statusbar"
-                       statusbar_visible="received,diagnosis,quoted,in_repair,ready,delivered"
-                       options="{'clickable': False}"/>
             </xpath>
 
             <!-- Banner contextual de ayuda (neurociencia: carga cognitiva mínima) -->
             <xpath expr="//sheet" position="before">
-                <div class="alert o_workshop_helper"
+                <div class="alert alert-info o_workshop_helper"
                      role="status"
-                     t-attf-class="alert-#{workshop_state == 'delivered' and 'success' or workshop_state == 'cancelled' and 'secondary' or workshop_state == 'in_repair' and 'warning' or 'info'}"
                      invisible="not workshop_helper">
                     <field name="workshop_helper" nolabel="1" readonly="1"/>
-                    <div class="progress mt-2" style="height: 6px;">
-                        <div class="progress-bar"
-                             t-attf-style="width: #{workshop_progress}%"
-                             t-attf-class="bg-#{workshop_state == 'delivered' and 'success' or 'primary'}"/>
-                    </div>
                 </div>
             </xpath>
 
-            <!-- Bloque de datos del vehículo, antes del bloque comercial -->
+            <!-- Bloque de datos del vehículo, después del cliente -->
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="vehicle_id"
                        options="{'no_create': False, 'no_open': False}"
@@ -112,8 +98,7 @@
 
             <!-- Km y técnico junto a las fechas -->
             <xpath expr="//field[@name='date_order']" position="after">
-                <field name="km_in"
-                       placeholder="Odómetro al recibir"/>
+                <field name="km_in" placeholder="Odómetro al recibir"/>
                 <field name="km_out"
                        readonly="workshop_state not in ('ready','delivered')"
                        invisible="workshop_state in ('received','diagnosis','quoted','in_repair')"/>
@@ -122,35 +107,14 @@
                        required="workshop_state in ('diagnosis','in_repair','ready','delivered')"/>
             </xpath>
 
-            <!-- Progreso y "qué hacer ahora" en header area -->
-            <xpath expr="//field[@name='workshop_state']" position="before">
-                <field name="workshop_progress" invisible="1"/>
-                <field name="workshop_color" invisible="1"/>
-                <field name="customer_approved" invisible="1"/>
-                <field name="workshop_next_action" invisible="1"/>
-                <field name="workshop_helper" invisible="1"/>
-            </xpath>
-
             <!-- Campos del taller en líneas: DOT, posición, terminado -->
-            <xpath expr="//field[@name='order_line']/list/field[@name='product_template_id']" position="after">
-                <field name="is_tire_line" column_invisible="1"/>
-            </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
-                <field name="dot_code"
-                       string="DOT"
-                       optional="show"
-                       column_invisible="parent.workshop_state == 'cancelled'"/>
-                <field name="installed_position"
-                       string="Posición"
-                       optional="show"
-                       column_invisible="parent.workshop_state == 'cancelled'"/>
+                <field name="dot_code" string="DOT" optional="show"/>
+                <field name="installed_position" string="Posición" optional="show"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/list/field[@name='price_subtotal']" position="after">
-                <field name="workshop_done"
-                       string="✓"
-                       optional="show"
-                       widget="boolean_toggle"
-                       column_invisible="parent.workshop_state not in ('in_repair','ready')"/>
+                <field name="workshop_done" string="Hecho"
+                       optional="show" widget="boolean_toggle"/>
             </xpath>
 
             <!-- Pestaña adicional "Taller" con diagnóstico y aprobación -->
@@ -177,10 +141,7 @@
         </field>
     </record>
 
-    <!-- ════════════════════ KANBAN TALLER ════════════════════
-         Tablero visual por workshop_state. Cada auto es una tarjeta
-         que se arrastra de columna a columna. Colores semánticos.
-    -->
+    <!-- ════════════════════ KANBAN TALLER ════════════════════ -->
     <record id="view_sale_order_kanban_workshop" model="ir.ui.view">
         <field name="name">sale.order.kanban.workshop</field>
         <field name="model">sale.order</field>
@@ -195,7 +156,6 @@
                 <field name="workshop_state"/>
                 <field name="workshop_color"/>
                 <field name="workshop_progress"/>
-                <field name="workshop_next_action"/>
                 <field name="license_plate"/>
                 <field name="vehicle_id"/>
                 <field name="partner_id"/>
@@ -217,7 +177,7 @@
                                 <field name="vehicle_id"/>
                             </div>
                             <div class="d-flex justify-content-between mt-2 small">
-                                <span invisible="not technician_id">
+                                <span t-if="record.technician_id.raw_value">
                                     <i class="fa fa-user-circle me-1"/>
                                     <field name="technician_id"/>
                                 </span>
@@ -231,7 +191,7 @@
                             </div>
                             <div t-if="record.workshop_state.raw_value == 'quoted' and !record.customer_approved.raw_value"
                                  class="alert alert-warning p-1 mt-2 mb-0 small">
-                                ⏳ Esperando aprobación
+                                Esperando aprobación
                             </div>
                         </div>
                     </t>
@@ -245,32 +205,31 @@
         <field name="name">sale.order.search.workshop</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <search string="Órdenes de Taller">
+            <search>
                 <field name="name" string="Número OT"/>
                 <field name="license_plate" string="Patente"/>
                 <field name="partner_id"/>
                 <field name="vehicle_id"/>
                 <field name="technician_id"/>
-                <separator/>
-                <filter string="En curso" name="in_progress"
+                <filter name="in_progress" string="En curso"
                         domain="[('workshop_state','in',['received','diagnosis','quoted','in_repair','ready'])]"/>
-                <filter string="Esperando aprobación" name="waiting_approval"
+                <filter name="waiting_approval" string="Esperando aprobación"
                         domain="[('workshop_state','=','quoted'),('customer_approved','=',False)]"/>
-                <filter string="Listos para entregar" name="ready"
+                <filter name="ready_filter" string="Listos para entregar"
                         domain="[('workshop_state','=','ready')]"/>
-                <filter string="Entregados" name="delivered"
+                <filter name="delivered" string="Entregados"
                         domain="[('workshop_state','=','delivered')]"/>
-                <filter string="Canceladas" name="cancelled"
+                <filter name="cancelled" string="Canceladas"
                         domain="[('workshop_state','=','cancelled')]"/>
                 <separator/>
-                <filter string="Asignadas a mí" name="my_tech"
+                <filter name="my_tech" string="Asignadas a mí"
                         domain="[('technician_id','=',uid)]"/>
-                <group expand="0" string="Agrupar por">
-                    <filter string="Estado taller" name="group_wstate"
+                <group>
+                    <filter name="group_wstate" string="Estado taller"
                             context="{'group_by': 'workshop_state'}"/>
-                    <filter string="Técnico" name="group_tech"
+                    <filter name="group_tech" string="Técnico"
                             context="{'group_by': 'technician_id'}"/>
-                    <filter string="Cliente" name="group_partner"
+                    <filter name="group_partner" string="Cliente"
                             context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
@@ -281,25 +240,14 @@
     <record id="action_workshop_orders" model="ir.actions.act_window">
         <field name="name">Órdenes de Taller</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">kanban,list,form,calendar,pivot,graph</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_sale_order_search_workshop"/>
         <field name="context">{
             'search_default_in_progress': 1,
             'default_workshop_state': 'received',
         }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Abrí la primera orden de taller
-            </p>
-            <p>
-                Cada tarjeta es un auto en tu taller. Arrastrala entre columnas
-                a medida que avanza: Recibido → Diagnóstico → Presupuestado →
-                En reparación → Listo → Entregado.
-            </p>
-        </field>
     </record>
 
-    <!-- Asociar el kanban de taller a la action -->
     <record id="action_workshop_orders_kanban" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
         <field name="view_mode">kanban</field>
