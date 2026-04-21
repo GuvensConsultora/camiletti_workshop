@@ -28,7 +28,7 @@ class WorkshopVehicle(models.Model):
         help="Cliente titular del vehículo. Define a quién se factura.")
 
     brand = fields.Char(string="Marca", tracking=True)
-    model = fields.Char(string="Modelo", tracking=True)
+    vehicle_model = fields.Char(string="Modelo", tracking=True)
     year = fields.Integer(string="Año", tracking=True)
     color = fields.Char(string="Color")
     vehicle_type = fields.Selection([
@@ -68,12 +68,12 @@ class WorkshopVehicle(models.Model):
     company_id = fields.Many2one(
         "res.company", default=lambda s: s.env.company, index=True)
 
-    @api.depends("license_plate", "brand", "model")
+    @api.depends("license_plate", "brand", "vehicle_model")
     def _compute_display_name(self):
         for v in self:
             parts = [v.license_plate or "?"]
-            if v.brand or v.model:
-                parts.append(" ".join(filter(None, [v.brand, v.model])))
+            if v.brand or v.vehicle_model:
+                parts.append(" ".join(filter(None, [v.brand, v.vehicle_model])))
             v.display_name = " · ".join(parts)
 
     def _compute_service_order_count(self):

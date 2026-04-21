@@ -37,7 +37,7 @@
                         </group>
                         <group string="Identificación">
                             <field name="brand" placeholder="Ford, Toyota, VW..."/>
-                            <field name="model" placeholder="Hilux, Focus, Gol..."/>
+                            <field name="vehicle_model" placeholder="Hilux, Focus, Gol..."/>
                             <field name="year" placeholder="2020"/>
                             <field name="color"/>
                             <field name="fuel_type"/>
@@ -84,7 +84,7 @@
                 <field name="license_plate" string="Patente"/>
                 <field name="partner_id"/>
                 <field name="brand"/>
-                <field name="model"/>
+                <field name="vehicle_model"/>
                 <field name="year"/>
                 <field name="vehicle_type"/>
                 <field name="odometer" string="Km"/>
@@ -103,7 +103,7 @@
                 <field name="license_plate"/>
                 <field name="partner_id"/>
                 <field name="brand"/>
-                <field name="model"/>
+                <field name="vehicle_model"/>
                 <field name="vehicle_type"/>
                 <field name="service_order_count"/>
                 <templates>
@@ -116,7 +116,7 @@
                         <div class="o_kanban_card_content px-2 pb-2">
                             <div><field name="partner_id"/></div>
                             <div class="text-muted">
-                                <field name="brand"/> <field name="model"/>
+                                <field name="brand"/> <field name="vehicle_model"/>
                                 <span invisible="not year"> · <field name="year"/></span>
                             </div>
                             <div class="mt-1">
@@ -140,7 +140,7 @@
                 <field name="license_plate"/>
                 <field name="partner_id"/>
                 <field name="brand"/>
-                <field name="model"/>
+                <field name="vehicle_model"/>
                 <field name="vin_sn"/>
                 <filter string="Autos" name="type_auto"
                         domain="[('vehicle_type','=','auto')]"/>
