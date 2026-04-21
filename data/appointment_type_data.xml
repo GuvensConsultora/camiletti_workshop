@@ -10,7 +10,7 @@
         <field name="equipamiento_requerido_ids" eval="[(6,0,[
             ref('equipo_elevador_2col'),
         ])]"/>
-        <field name="category">punctual</field>
+        <field name="category">recurring</field>
     </record>
 
     <record id="appointment_type_instalacion" model="appointment.type">
@@ -23,7 +23,7 @@
             ref('equipo_desmontadora'),
             ref('equipo_balanceadora'),
         ])]"/>
-        <field name="category">punctual</field>
+        <field name="category">recurring</field>
     </record>
 
     <record id="appointment_type_alineacion" model="appointment.type">
@@ -35,7 +35,7 @@
             ref('equipo_elevador_4col'),
             ref('equipo_alineadora'),
         ])]"/>
-        <field name="category">punctual</field>
+        <field name="category">recurring</field>
     </record>
 
 </odoo>
