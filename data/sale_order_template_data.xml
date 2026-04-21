@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="sale_order_template_solo_compra" model="sale.order.template">
+        <field name="name">Solo compra (sin colocación)</field>
+        <field name="number_of_days">7</field>
+        <field name="note">&lt;p&gt;El cliente compra las cubiertas sin colocación en el taller.
+                Balanceo y alineación no incluidos.&lt;/p&gt;</field>
+    </record>
+
+    <record id="sale_order_template_compra_colocacion" model="sale.order.template">
+        <field name="name">Compra + colocación</field>
+        <field name="number_of_days">7</field>
+        <field name="note">&lt;p&gt;Plantilla estándar de gomería: incluye balanceo, diagnóstico
+                de alineación, válvula y eliminación de cubierta usada por unidad.
+                La línea de cubierta y el servicio de alineación correctiva se agregan
+                desde el lead/DVI.&lt;/p&gt;</field>
+    </record>
+
+    <record id="sol_tmpl_balanceo" model="sale.order.template.line">
+        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
+        <field name="sequence">10</field>
+        <field name="name">Balanceo (por rueda colocada)</field>
+        <field name="product_id" ref="product_balanceo"/>
+        <field name="product_uom_qty">4.0</field>
+    </record>
+
+    <record id="sol_tmpl_diag_alineacion" model="sale.order.template.line">
+        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
+        <field name="sequence">20</field>
+        <field name="name">Diagnóstico de alineación</field>
+        <field name="product_id" ref="product_diagnostico_alineacion"/>
+        <field name="product_uom_qty">1.0</field>
+    </record>
+
+    <record id="sol_tmpl_valvula" model="sale.order.template.line">
+        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
+        <field name="sequence">30</field>
+        <field name="name">Válvula</field>
+        <field name="product_id" ref="product_valvula"/>
+        <field name="product_uom_qty">4.0</field>
+    </record>
+
+    <record id="sol_tmpl_eliminacion" model="sale.order.template.line">
+        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
+        <field name="sequence">40</field>
+        <field name="name">Eliminación de cubierta usada</field>
+        <field name="product_id" ref="product_eliminacion_cubierta"/>
+        <field name="product_uom_qty">4.0</field>
+    </record>
+
+    <!-- Opciones (upsell sugerido) -->
+    <record id="sol_opt_alineacion_correctiva" model="sale.order.option">
+        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
+        <field name="sequence">10</field>
+        <field name="name">Alineación correctiva tren delantero</field>
+        <field name="product_id" ref="product_alineacion_correctiva"/>
+        <field name="quantity">1.0</field>
+    </record>
+
+</odoo>

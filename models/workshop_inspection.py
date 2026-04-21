@@ -169,6 +169,13 @@ class WorkshopInspectionLine(models.Model):
         domain="[('sale_ok','=',True)]",
         help="Si se carga, aparecerá en el botón 'Agregar sugerencias al presupuesto'.")
     suggested_qty = fields.Float(string="Cantidad sugerida", default=1.0)
+    tipo_sugerencia = fields.Selection([
+        ("fijo", "Fijo"),
+        ("dinamico", "Dinámico (resuelve por atributos del vehículo)"),
+    ], default="fijo", string="Tipo de sugerencia",
+        help="Fijo: usa suggested_service_id tal cual. "
+             "Dinámico: resuelve producto en runtime cruzando medida del vehículo "
+             "contra el catálogo de cubiertas.")
 
     @api.depends("status")
     def _compute_status_color(self):

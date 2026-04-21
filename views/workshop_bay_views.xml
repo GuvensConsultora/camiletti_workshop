@@ -9,9 +9,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
-                <field name="bay_type"/>
-                <field name="capacity"/>
-                <field name="default_technician_id"/>
+                <field name="tecnico_por_defecto_id"/>
                 <field name="state"
                        decoration-success="state == 'available'"
                        decoration-warning="state == 'busy'"
@@ -45,30 +43,34 @@
                         <group string="Identidad">
                             <field name="code" placeholder="Ej. EL1"/>
                             <field name="sequence"/>
-                            <field name="bay_type"/>
                             <field name="color" widget="color_picker"/>
                             <field name="active" invisible="1"/>
+                            <field name="resource_id" invisible="1"/>
                         </group>
-                        <group string="Capacidad y equipamiento">
-                            <field name="capacity"/>
-                            <field name="max_vehicle_weight"/>
-                            <field name="equipment_description"
-                                   placeholder="Ej. Elevador 2 columnas 3500kg; alineadora Hunter PA200"/>
+                        <group string="Vehículos admitidos">
+                            <field name="accepts_auto"/>
+                            <field name="accepts_camioneta"/>
+                            <field name="accepts_camion"/>
                         </group>
                     </group>
                     <group>
                         <group string="Personal">
-                            <field name="default_technician_id"
+                            <field name="tecnico_por_defecto_id"
                                    options="{'no_create': True}"/>
-                            <field name="technician_ids" widget="many2many_tags"
+                            <field name="tecnico_ids" widget="many2many_tags"
                                    options="{'no_create': True}"/>
                         </group>
                         <group string="Ocupación">
                             <field name="active_order_count"/>
                             <field name="is_occupied"/>
+                            <field name="capacity"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Equipamiento" name="equipamiento">
+                            <field name="equipamiento_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                        </page>
                         <page string="OTs asignadas" name="orders">
                             <field name="current_order_ids">
                                 <list>
@@ -81,9 +83,13 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Observaciones" name="note">
-                            <field name="note" nolabel="1"
-                                   placeholder="Particularidades, calibraciones pendientes, etc."/>
+                        <page string="Notas" name="note">
+                            <group>
+                                <field name="note" string="Observaciones"
+                                       placeholder="Visibles para técnicos..."/>
+                                <field name="notas_internas" string="Notas internas"
+                                       placeholder="Solo gerencia..."/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -100,24 +106,20 @@
                 <field name="state"/>
                 <field name="color"/>
                 <field name="active_order_count"/>
-                <field name="capacity"/>
                 <field name="is_occupied"/>
                 <templates>
                     <t t-name="card">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="d-flex justify-content-between">
                                 <strong><field name="code"/> — <field name="name"/></strong>
-                                <span class="badge text-bg-light">
-                                    <field name="bay_type"/>
-                                </span>
                             </div>
                             <div class="text-muted small mt-1">
                                 <i class="fa fa-car me-1"/>
-                                <field name="active_order_count"/> / <field name="capacity"/> OTs
+                                <field name="active_order_count"/> OTs activas
                             </div>
-                            <div t-if="record.default_technician_id.raw_value" class="small mt-1">
+                            <div t-if="record.tecnico_por_defecto_id.raw_value" class="small mt-1">
                                 <i class="fa fa-user-circle me-1"/>
-                                <field name="default_technician_id"/>
+                                <field name="tecnico_por_defecto_id"/>
                             </div>
                         </div>
                     </t>
@@ -133,8 +135,8 @@
             <search>
                 <field name="name"/>
                 <field name="code"/>
-                <field name="bay_type"/>
-                <field name="default_technician_id"/>
+                <field name="tecnico_por_defecto_id"/>
+                <field name="equipamiento_ids"/>
                 <filter name="available" string="Disponibles"
                         domain="[('state','=','available')]"/>
                 <filter name="busy" string="Ocupadas"
@@ -144,8 +146,6 @@
                 <filter name="archived" string="Archivadas"
                         domain="[('active','=',False)]"/>
                 <group>
-                    <filter name="group_type" string="Tipo"
-                            context="{'group_by': 'bay_type'}"/>
                     <filter name="group_state" string="Estado"
                             context="{'group_by': 'state'}"/>
                 </group>

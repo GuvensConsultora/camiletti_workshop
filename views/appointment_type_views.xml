@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_appointment_type_form_workshop" model="ir.ui.view">
+        <field name="name">appointment.type.form.workshop</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Taller (Camilleti)">
+                    <field name="workshop_is_diagnostic"/>
+                    <field name="equipamiento_requerido_ids" widget="many2many_tags"
+                           options="{'no_create': True}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_workshop_equipo_list" model="ir.ui.view">
+        <field name="name">workshop.equipo.list</field>
+        <field name="model">workshop.equipo</field>
+        <field name="arch" type="xml">
+            <list string="Equipamiento" editable="bottom">
+                <field name="tipo"/>
+                <field name="name"/>
+                <field name="description" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_workshop_equipo_form" model="ir.ui.view">
+        <field name="name">workshop.equipo.form</field>
+        <field name="model">workshop.equipo</field>
+        <field name="arch" type="xml">
+            <form string="Equipo">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="tipo"/>
+                        <field name="active"/>
+                    </group>
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_workshop_equipo" model="ir.actions.act_window">
+        <field name="name">Equipamiento</field>
+        <field name="res_model">workshop.equipo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="appointment_type_diagnostico" model="appointment.type">
+        <field name="name">Diagnóstico DVI</field>
+        <field name="appointment_duration">0.5</field>
+        <field name="min_schedule_hours">1.0</field>
+        <field name="max_schedule_days">14</field>
+        <field name="workshop_is_diagnostic">1</field>
+        <field name="equipamiento_requerido_ids" eval="[(6,0,[
+            ref('equipo_elevador_2col'),
+        ])]"/>
+        <field name="category">punctual</field>
+    </record>
+
+    <record id="appointment_type_instalacion" model="appointment.type">
+        <field name="name">Instalación + balanceo</field>
+        <field name="appointment_duration">1.0</field>
+        <field name="min_schedule_hours">1.0</field>
+        <field name="max_schedule_days">14</field>
+        <field name="equipamiento_requerido_ids" eval="[(6,0,[
+            ref('equipo_elevador_2col'),
+            ref('equipo_desmontadora'),
+            ref('equipo_balanceadora'),
+        ])]"/>
+        <field name="category">punctual</field>
+    </record>
+
+    <record id="appointment_type_alineacion" model="appointment.type">
+        <field name="name">Alineación correctiva</field>
+        <field name="appointment_duration">1.0</field>
+        <field name="min_schedule_hours">1.0</field>
+        <field name="max_schedule_days">14</field>
+        <field name="equipamiento_requerido_ids" eval="[(6,0,[
+            ref('equipo_elevador_4col'),
+            ref('equipo_alineadora'),
+        ])]"/>
+        <field name="category">punctual</field>
+    </record>
+
+</odoo>

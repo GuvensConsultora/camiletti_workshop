@@ -41,4 +41,16 @@
               parent="menu_workshop_config"
               action="action_workshop_bay"
               sequence="20"/>
+
+    <menuitem id="menu_workshop_config_equipo"
+              name="Equipamiento"
+              parent="menu_workshop_config"
+              action="action_workshop_equipo"
+              sequence="30"/>
+
+    <menuitem id="menu_workshop_config_appointment_types"
+              name="Tipos de turno"
+              parent="menu_workshop_config"
+              action="appointment.appointment_type_action"
+              sequence="40"/>
 </odoo>

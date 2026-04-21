@@ -1,46 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="bay_elevator_1" model="workshop.bay">
+    <!-- appointment.resource base (delegación) -->
+    <record id="resource_bay_el1" model="appointment.resource">
         <field name="name">Elevador 1</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="resource_bay_el2" model="appointment.resource">
+        <field name="name">Elevador 2</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="resource_bay_al1" model="appointment.resource">
+        <field name="name">Alineación</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="resource_bay_bal" model="appointment.resource">
+        <field name="name">Balanceo</field>
+        <field name="capacity">1</field>
+    </record>
+
+    <!-- workshop.bay con _inherits a appointment.resource -->
+    <record id="bay_elevator_1" model="workshop.bay">
+        <field name="resource_id" ref="resource_bay_el1"/>
         <field name="code">EL1</field>
         <field name="sequence">10</field>
-        <field name="bay_type">elevator</field>
-        <field name="capacity">1</field>
-        <field name="max_vehicle_weight">3500</field>
-        <field name="equipment_description">Elevador 2 columnas 3500 kg. Montaje y desmontaje de ruedas.</field>
+        <field name="accepts_auto">1</field>
+        <field name="accepts_camioneta">1</field>
+        <field name="accepts_camion">0</field>
+        <field name="equipamiento_ids" eval="[(6,0,[
+            ref('equipo_elevador_2col'),
+            ref('equipo_desmontadora'),
+            ref('equipo_torque'),
+        ])]"/>
+        <field name="note">Montaje y desmontaje de ruedas.</field>
         <field name="color">2</field>
     </record>
 
     <record id="bay_elevator_2" model="workshop.bay">
-        <field name="name">Elevador 2</field>
+        <field name="resource_id" ref="resource_bay_el2"/>
         <field name="code">EL2</field>
         <field name="sequence">20</field>
-        <field name="bay_type">elevator</field>
-        <field name="capacity">1</field>
-        <field name="max_vehicle_weight">3500</field>
-        <field name="equipment_description">Elevador 2 columnas 3500 kg. Montaje y desmontaje de ruedas.</field>
+        <field name="accepts_auto">1</field>
+        <field name="accepts_camioneta">1</field>
+        <field name="accepts_camion">0</field>
+        <field name="equipamiento_ids" eval="[(6,0,[
+            ref('equipo_elevador_2col'),
+            ref('equipo_desmontadora'),
+            ref('equipo_torque'),
+        ])]"/>
+        <field name="note">Montaje y desmontaje de ruedas.</field>
         <field name="color">2</field>
     </record>
 
     <record id="bay_alignment" model="workshop.bay">
-        <field name="name">Alineación</field>
+        <field name="resource_id" ref="resource_bay_al1"/>
         <field name="code">AL1</field>
         <field name="sequence">30</field>
-        <field name="bay_type">alignment</field>
-        <field name="capacity">1</field>
-        <field name="max_vehicle_weight">3500</field>
-        <field name="equipment_description">Alineadora 3D + elevador de tijera. Tren delantero y trasero.</field>
+        <field name="accepts_auto">1</field>
+        <field name="accepts_camioneta">1</field>
+        <field name="accepts_camion">0</field>
+        <field name="equipamiento_ids" eval="[(6,0,[
+            ref('equipo_elevador_4col'),
+            ref('equipo_alineadora'),
+        ])]"/>
+        <field name="note">Tren delantero y trasero — alineación 3D.</field>
         <field name="color">4</field>
     </record>
 
     <record id="bay_balancer" model="workshop.bay">
-        <field name="name">Balanceo</field>
+        <field name="resource_id" ref="resource_bay_bal"/>
         <field name="code">BAL</field>
         <field name="sequence">40</field>
-        <field name="bay_type">balancer</field>
-        <field name="capacity">1</field>
-        <field name="equipment_description">Balanceadora electrónica de rodado hasta 24".</field>
+        <field name="accepts_auto">1</field>
+        <field name="accepts_camioneta">1</field>
+        <field name="accepts_camion">1</field>
+        <field name="equipamiento_ids" eval="[(6,0,[
+            ref('equipo_balanceadora'),
+        ])]"/>
+        <field name="note">Balanceo electrónico hasta 24&quot;.</field>
         <field name="color">3</field>
     </record>
 

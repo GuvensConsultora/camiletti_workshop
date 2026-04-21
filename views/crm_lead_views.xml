@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crm_lead_form_workshop" model="ir.ui.view">
+        <field name="name">crm.lead.form.workshop</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="action_workshop_build_quote"
+                        type="object"
+                        string="Armar cotización"
+                        class="btn-primary"
+                        invisible="quote_id"/>
+                <button name="action_workshop_reschedule"
+                        type="object"
+                        string="Reagendar diagnóstico"
+                        class="btn-secondary"
+                        invisible="not dvi_event_id"/>
+            </xpath>
+
+            <!-- Banner con datos del turno de diagnóstico -->
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info" role="status"
+                     invisible="not dvi_event_id">
+                    <strong>Turno de diagnóstico:</strong>
+                    <field name="dvi_event_id" readonly="1" nolabel="1"/>
+                </div>
+                <div class="alert alert-warning" role="status"
+                     invisible="not es_flota">
+                    <strong>FLOTA</strong> — requiere autorización del contacto
+                    autorizador antes de confirmar la cotización.
+                </div>
+            </xpath>
+
+            <!-- Bloque vehículo + medida + walk-in arriba -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="vehicle_id"
+                       options="{'no_create': False}"
+                       domain="[('partner_id','=?', partner_id)]"
+                       context="{'default_partner_id': partner_id}"/>
+                <field name="license_plate" readonly="1" invisible="not vehicle_id"/>
+                <field name="medida" placeholder="Ej. 185/65 R15 91H"/>
+                <field name="medida_origen" widget="badge"/>
+                <field name="walk_in_directo"/>
+                <field name="es_flota" invisible="1"/>
+                <field name="dvi_id" invisible="1"/>
+                <field name="dvi_event_id" invisible="1"/>
+                <field name="quote_id" invisible="1"/>
+            </xpath>
+
+            <!-- Smart button a la cotización armada -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_quote" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="not quote_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Cotización</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

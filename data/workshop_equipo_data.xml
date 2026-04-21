@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="equipo_elevador_2col" model="workshop.equipo">
+        <field name="name">Elevador 2 columnas</field>
+        <field name="tipo">elevador_2col</field>
+        <field name="description">Elevador de dos columnas para auto y camioneta liviana hasta 3500 kg.</field>
+    </record>
+
+    <record id="equipo_elevador_4col" model="workshop.equipo">
+        <field name="name">Elevador 4 columnas</field>
+        <field name="tipo">elevador_4col</field>
+        <field name="description">Elevador de cuatro columnas para alineación.</field>
+    </record>
+
+    <record id="equipo_alineadora" model="workshop.equipo">
+        <field name="name">Alineadora 3D</field>
+        <field name="tipo">alineadora</field>
+        <field name="description">Alineadora 3D con cámaras para tren delantero y trasero.</field>
+    </record>
+
+    <record id="equipo_balanceadora" model="workshop.equipo">
+        <field name="name">Balanceadora electrónica</field>
+        <field name="tipo">balanceadora</field>
+        <field name="description">Balanceadora electrónica rodado hasta 24 pulgadas.</field>
+    </record>
+
+    <record id="equipo_desmontadora" model="workshop.equipo">
+        <field name="name">Desmontadora automática</field>
+        <field name="tipo">desmontadora</field>
+        <field name="description">Desmontadora automática con brazo asistido.</field>
+    </record>
+
+    <record id="equipo_foso" model="workshop.equipo">
+        <field name="name">Foso de inspección</field>
+        <field name="tipo">foso_inspeccion</field>
+    </record>
+
+    <record id="equipo_torque" model="workshop.equipo">
+        <field name="name">Torquímetro hidráulico</field>
+        <field name="tipo">torque_hidraulico</field>
+    </record>
+
+</odoo>

@@ -127,6 +127,7 @@
                                                    options="{'preview_image': 'photo'}"/>
                                         </group>
                                         <group string="Servicio sugerido (opcional)">
+                                            <field name="tipo_sugerencia"/>
                                             <field name="suggested_service_id"/>
                                             <field name="suggested_qty"/>
                                         </group>
