@@ -62,6 +62,15 @@ class SaleOrder(models.Model):
         "res.users", string="Técnico asignado",
         domain="[('share','=',False)]", tracking=True)
 
+    driver_id = fields.Many2one(
+        "res.partner", string="Conductor", tracking=True,
+        help="Persona que trajo el vehículo al taller. Puede no ser el titular "
+             "(ej.: chofer de empresa, familiar).")
+    approver_id = fields.Many2one(
+        "res.partner", string="Aprobador del presupuesto", tracking=True,
+        help="Persona que autoriza el trabajo. Puede no ser ni el titular ni el "
+             "que factura (ej.: gerente de flota, jefe de taller del cliente).")
+
     bay_id = fields.Many2one(
         "workshop.bay", string="Bahía", tracking=True, index=True,
         help="Puesto físico del taller donde se realiza el trabajo.")
@@ -336,14 +345,22 @@ class SaleOrder(models.Model):
                        message, o.workshop_next_action or "—"))
         return True
 
-    @api.onchange("partner_id")
-    def _onchange_partner_clear_vehicle(self):
-        for o in self:
-            if o.vehicle_id and o.vehicle_id.partner_id != o.partner_id:
-                o.vehicle_id = False
-
     @api.onchange("vehicle_id")
-    def _onchange_vehicle_suggest_km(self):
+    def _onchange_vehicle_suggest_defaults(self):
+        """Sugiere km, titular como partner/driver/approver por default al elegir vehículo.
+
+        No sobrescribe lo que el usuario haya cargado a mano — solo completa vacíos.
+        El partner de facturación puede seguir siendo distinto del titular.
+        """
         for o in self:
-            if o.vehicle_id and not o.km_in:
+            if not o.vehicle_id:
+                continue
+            if not o.km_in:
                 o.km_in = o.vehicle_id.odometer or 0
+            owner = o.vehicle_id.partner_id
+            if not o.partner_id:
+                o.partner_id = owner
+            if not o.driver_id:
+                o.driver_id = owner
+            if not o.approver_id:
+                o.approver_id = owner

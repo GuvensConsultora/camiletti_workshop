@@ -102,10 +102,15 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="vehicle_id"
                        options="{'no_create': False, 'no_open': False}"
-                       domain="[('partner_id','=?', partner_id)]"
                        context="{'default_partner_id': partner_id}"
                        required="workshop_state in ('diagnosis','quoted','in_repair','ready','delivered')"/>
                 <field name="license_plate" readonly="1" invisible="not vehicle_id"/>
+                <field name="driver_id"
+                       options="{'no_create_edit': False}"
+                       placeholder="Quién trae el auto (opcional si es el titular)"/>
+                <field name="approver_id"
+                       options="{'no_create_edit': False}"
+                       placeholder="Quién aprueba el presupuesto"/>
                 <field name="inspection_id" invisible="1"/>
             </xpath>
 

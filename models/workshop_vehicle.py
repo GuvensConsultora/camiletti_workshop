@@ -23,9 +23,23 @@ class WorkshopVehicle(models.Model):
         string="VIN / Número de chasis", tracking=True,
         help="17 caracteres alfanuméricos (ISO 3779). Opcional pero recomendado.")
     partner_id = fields.Many2one(
-        "res.partner", string="Cliente dueño", required=True, tracking=True,
+        "res.partner", string="Titular actual", required=True, tracking=True,
         index=True, ondelete="restrict",
-        help="Cliente titular del vehículo. Define a quién se factura.")
+        help="Titular vigente del vehículo. Se sincroniza con el registro "
+             "abierto en el historial de titulares.")
+
+    owner_history_ids = fields.One2many(
+        "workshop.vehicle.owner.history", "vehicle_id",
+        string="Historial de titulares")
+    previous_owner_ids = fields.Many2many(
+        "res.partner", string="Titulares anteriores",
+        compute="_compute_previous_owners")
+
+    @api.depends("owner_history_ids.partner_id", "owner_history_ids.date_to", "partner_id")
+    def _compute_previous_owners(self):
+        for v in self:
+            v.previous_owner_ids = v.owner_history_ids.filtered(
+                "date_to").mapped("partner_id") - v.partner_id
 
     brand = fields.Char(string="Marca", tracking=True)
     vehicle_model = fields.Char(string="Modelo", tracking=True)
@@ -122,12 +136,42 @@ class WorkshopVehicle(models.Model):
         for vals in vals_list:
             if vals.get("license_plate"):
                 vals["license_plate"] = self._normalize_plate(vals["license_plate"])
-        return super().create(vals_list)
+        vehicles = super().create(vals_list)
+        today = fields.Date.context_today(self)
+        self.env["workshop.vehicle.owner.history"].create([
+            {"vehicle_id": v.id,
+             "partner_id": v.partner_id.id,
+             "date_from": today,
+             "notes": _("Alta del vehículo")}
+            for v in vehicles if v.partner_id
+        ])
+        return vehicles
 
     def write(self, vals):
         if vals.get("license_plate"):
             vals["license_plate"] = self._normalize_plate(vals["license_plate"])
-        return super().write(vals)
+        new_partner = vals.get("partner_id")
+        transitions = []
+        if new_partner:
+            for v in self:
+                if v.partner_id.id != new_partner:
+                    transitions.append(v)
+        res = super().write(vals)
+        if transitions:
+            today = fields.Date.context_today(self)
+            History = self.env["workshop.vehicle.owner.history"]
+            for v in transitions:
+                open_rec = History.search(
+                    [("vehicle_id", "=", v.id), ("date_to", "=", False)], limit=1)
+                if open_rec:
+                    open_rec.date_to = today
+                History.create({
+                    "vehicle_id": v.id,
+                    "partner_id": new_partner,
+                    "date_from": today,
+                    "notes": _("Cambio de titular"),
+                })
+        return res
 
     def action_view_service_orders(self):
         self.ensure_one()

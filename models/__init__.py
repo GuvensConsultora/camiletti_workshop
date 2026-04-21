@@ -1,6 +1,7 @@
 from . import workshop_equipo
 from . import workshop_bay
 from . import workshop_vehicle
+from . import workshop_vehicle_owner_history
 from . import workshop_inspection
 from . import appointment_type
 from . import calendar_event
