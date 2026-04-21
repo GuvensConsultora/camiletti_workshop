@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Plantilla DVI: ~44 puntos agrupados en 9 categorías.
+         Basado en MAP (Motorist Assurance Program) + adaptaciones Camilleti. -->
+
+    <!-- ═══ Neumáticos (5) ═══ -->
+    <record id="tpl_tire_fl" model="workshop.inspection.template">
+        <field name="name">Neumático delantero izquierdo</field>
+        <field name="category">tires</field>
+        <field name="sequence">10</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm / PSI / DOT</field>
+    </record>
+    <record id="tpl_tire_fr" model="workshop.inspection.template">
+        <field name="name">Neumático delantero derecho</field>
+        <field name="category">tires</field>
+        <field name="sequence">20</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm / PSI / DOT</field>
+    </record>
+    <record id="tpl_tire_rl" model="workshop.inspection.template">
+        <field name="name">Neumático trasero izquierdo</field>
+        <field name="category">tires</field>
+        <field name="sequence">30</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm / PSI / DOT</field>
+    </record>
+    <record id="tpl_tire_rr" model="workshop.inspection.template">
+        <field name="name">Neumático trasero derecho</field>
+        <field name="category">tires</field>
+        <field name="sequence">40</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm / PSI / DOT</field>
+    </record>
+    <record id="tpl_tire_spare" model="workshop.inspection.template">
+        <field name="name">Neumático de auxilio</field>
+        <field name="category">tires</field>
+        <field name="sequence">50</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm / PSI</field>
+    </record>
+
+    <!-- ═══ Llantas (4) ═══ -->
+    <record id="tpl_wheel_fl" model="workshop.inspection.template">
+        <field name="name">Llanta delantera izquierda</field>
+        <field name="category">wheels</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_wheel_fr" model="workshop.inspection.template">
+        <field name="name">Llanta delantera derecha</field>
+        <field name="category">wheels</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_wheel_rl" model="workshop.inspection.template">
+        <field name="name">Llanta trasera izquierda</field>
+        <field name="category">wheels</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_wheel_rr" model="workshop.inspection.template">
+        <field name="name">Llanta trasera derecha</field>
+        <field name="category">wheels</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- ═══ Frenos delanteros (6) ═══ -->
+    <record id="tpl_brake_fl_pad" model="workshop.inspection.template">
+        <field name="name">Pastilla freno delantero izquierdo</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">10</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm</field>
+    </record>
+    <record id="tpl_brake_fr_pad" model="workshop.inspection.template">
+        <field name="name">Pastilla freno delantero derecho</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">20</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm</field>
+    </record>
+    <record id="tpl_brake_fl_disc" model="workshop.inspection.template">
+        <field name="name">Disco freno delantero izquierdo</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">30</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm espesor</field>
+    </record>
+    <record id="tpl_brake_fr_disc" model="workshop.inspection.template">
+        <field name="name">Disco freno delantero derecho</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">40</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm espesor</field>
+    </record>
+    <record id="tpl_brake_front_caliper" model="workshop.inspection.template">
+        <field name="name">Calipers y latiguillos delanteros</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="tpl_brake_fluid" model="workshop.inspection.template">
+        <field name="name">Líquido de frenos (nivel / estado / color)</field>
+        <field name="category">brakes_front</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <!-- ═══ Frenos traseros (5) ═══ -->
+    <record id="tpl_brake_rl_pad" model="workshop.inspection.template">
+        <field name="name">Pastilla / cinta freno trasero izquierdo</field>
+        <field name="category">brakes_rear</field>
+        <field name="sequence">10</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm</field>
+    </record>
+    <record id="tpl_brake_rr_pad" model="workshop.inspection.template">
+        <field name="name">Pastilla / cinta freno trasero derecho</field>
+        <field name="category">brakes_rear</field>
+        <field name="sequence">20</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">mm</field>
+    </record>
+    <record id="tpl_brake_rl_disc" model="workshop.inspection.template">
+        <field name="name">Disco / campana trasero izquierdo</field>
+        <field name="category">brakes_rear</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_brake_rr_disc" model="workshop.inspection.template">
+        <field name="name">Disco / campana trasero derecho</field>
+        <field name="category">brakes_rear</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="tpl_handbrake" model="workshop.inspection.template">
+        <field name="name">Freno de mano (tensión / regulación)</field>
+        <field name="category">brakes_rear</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- ═══ Tren delantero (7) ═══ -->
+    <record id="tpl_susp_f_balljoint_l" model="workshop.inspection.template">
+        <field name="name">Rótula suspensión izquierda</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_susp_f_balljoint_r" model="workshop.inspection.template">
+        <field name="name">Rótula suspensión derecha</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_susp_f_tierod_l" model="workshop.inspection.template">
+        <field name="name">Extremo de dirección izquierdo</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_susp_f_tierod_r" model="workshop.inspection.template">
+        <field name="name">Extremo de dirección derecho</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="tpl_susp_f_shock_l" model="workshop.inspection.template">
+        <field name="name">Amortiguador delantero izquierdo</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="tpl_susp_f_shock_r" model="workshop.inspection.template">
+        <field name="name">Amortiguador delantero derecho</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="tpl_susp_f_stab" model="workshop.inspection.template">
+        <field name="name">Bieletas / barra estabilizadora delantera</field>
+        <field name="category">suspension_front</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <!-- ═══ Tren trasero (4) ═══ -->
+    <record id="tpl_susp_r_shock_l" model="workshop.inspection.template">
+        <field name="name">Amortiguador trasero izquierdo</field>
+        <field name="category">suspension_rear</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_susp_r_shock_r" model="workshop.inspection.template">
+        <field name="name">Amortiguador trasero derecho</field>
+        <field name="category">suspension_rear</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_susp_r_springs" model="workshop.inspection.template">
+        <field name="name">Elásticos / espirales traseros</field>
+        <field name="category">suspension_rear</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_susp_r_bushings" model="workshop.inspection.template">
+        <field name="name">Bujes y bieletas traseras</field>
+        <field name="category">suspension_rear</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- ═══ Dirección (4) ═══ -->
+    <record id="tpl_steer_box" model="workshop.inspection.template">
+        <field name="name">Caja de dirección (holgura / pérdida)</field>
+        <field name="category">steering</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_steer_column" model="workshop.inspection.template">
+        <field name="name">Columna y cardán de dirección</field>
+        <field name="category">steering</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_steer_pump" model="workshop.inspection.template">
+        <field name="name">Bomba hidráulica / nivel</field>
+        <field name="category">steering</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_steer_align" model="workshop.inspection.template">
+        <field name="name">Alineación (convergencia / camber / caster)</field>
+        <field name="category">steering</field>
+        <field name="sequence">40</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">° / mm</field>
+    </record>
+
+    <!-- ═══ Aceite y lubricantes (6) ═══ -->
+    <record id="tpl_oil_engine" model="workshop.inspection.template">
+        <field name="name">Aceite motor (nivel / estado / km)</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">10</field>
+        <field name="is_measurable">True</field>
+        <field name="value_unit">km desde último cambio</field>
+    </record>
+    <record id="tpl_oil_filter" model="workshop.inspection.template">
+        <field name="name">Filtro de aceite</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_air_filter" model="workshop.inspection.template">
+        <field name="name">Filtro de aire</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="tpl_fuel_filter" model="workshop.inspection.template">
+        <field name="name">Filtro de combustible</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="tpl_coolant" model="workshop.inspection.template">
+        <field name="name">Líquido refrigerante (nivel / estado)</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="tpl_ps_fluid" model="workshop.inspection.template">
+        <field name="name">Líquido dirección hidráulica (si aplica)</field>
+        <field name="category">oil_fluids</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <!-- ═══ Otros (3) ═══ -->
+    <record id="tpl_other_lights" model="workshop.inspection.template">
+        <field name="name">Luces (frenos, posición, balizas, giros)</field>
+        <field name="category">other</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="tpl_other_wipers" model="workshop.inspection.template">
+        <field name="name">Limpiaparabrisas y líquido</field>
+        <field name="category">other</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="tpl_other_drivetrain" model="workshop.inspection.template">
+        <field name="name">Homocinéticas / crucetas / cardán</field>
+        <field name="category">other</field>
+        <field name="sequence">30</field>
+    </record>
+</odoo>

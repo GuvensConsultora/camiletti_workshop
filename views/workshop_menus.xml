@@ -18,6 +18,12 @@
               action="action_workshop_vehicle"
               sequence="20"/>
 
+    <menuitem id="menu_workshop_inspections"
+              name="Inspecciones DVI"
+              parent="menu_workshop_root"
+              action="action_workshop_inspection"
+              sequence="30"/>
+
     <menuitem id="menu_workshop_config"
               name="Configuración"
               parent="menu_workshop_root"

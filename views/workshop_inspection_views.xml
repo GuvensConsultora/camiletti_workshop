@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ════════════════════ FORM INSPECCIÓN ════════════════════
+         UX:
+         - KPI cards en el top: OK / Atención / Crítico (Von Restorff)
+         - Líneas agrupadas por categoría (progressive disclosure)
+         - Color por estado en el status (semáforo)
+         - Foto obligatoria en crítico (constraint en Python)
+         - Botón CTA para pasar sugerencias al presupuesto
+    -->
+    <record id="view_workshop_inspection_form" model="ir.ui.view">
+        <field name="name">workshop.inspection.form</field>
+        <field name="model">workshop.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Inspección DVI">
+                <header>
+                    <button name="action_add_suggestions_to_quote"
+                            type="object"
+                            string="Agregar sugerencias al presupuesto"
+                            class="btn-primary"
+                            invisible="state == 'done' or (count_warning == 0 and count_critical == 0)"
+                            groups="camiletti_workshop.group_workshop_technician"/>
+                    <button name="action_mark_done"
+                            type="object"
+                            string="Cerrar Inspección"
+                            class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <!-- KPIs rápidos -->
+                    <group>
+                        <group>
+                            <field name="sale_order_id" readonly="1"/>
+                            <field name="vehicle_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="technician_id"/>
+                            <field name="date"/>
+                            <field name="count_total" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <div class="row mt-2 mb-3">
+                        <div class="col-3">
+                            <div class="card text-bg-success">
+                                <div class="card-body p-2 text-center">
+                                    <h3><field name="count_ok" readonly="1"/></h3>
+                                    <small>OK</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-bg-warning">
+                                <div class="card-body p-2 text-center">
+                                    <h3><field name="count_warning" readonly="1"/></h3>
+                                    <small>Atención</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-bg-danger">
+                                <div class="card-body p-2 text-center">
+                                    <h3><field name="count_critical" readonly="1"/></h3>
+                                    <small>Crítico</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-bg-secondary">
+                                <div class="card-body p-2 text-center">
+                                    <h3><field name="count_na" readonly="1"/></h3>
+                                    <small>N/A</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <page string="Puntos de revisión" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom" default_group_by="category">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="category" optional="hide"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="status" widget="badge"
+                                           decoration-success="status == 'ok'"
+                                           decoration-warning="status == 'warning'"
+                                           decoration-danger="status == 'critical'"
+                                           decoration-info="status == 'replaced'"
+                                           decoration-muted="status == 'na'"/>
+                                    <field name="is_measurable" column_invisible="1"/>
+                                    <field name="value" optional="show"/>
+                                    <field name="value_unit" optional="show" readonly="1"/>
+                                    <field name="notes" optional="hide"/>
+                                    <field name="photo" widget="image" optional="show"
+                                           options="{'size': [60, 60]}"/>
+                                    <field name="suggested_service_id" optional="show"/>
+                                    <field name="suggested_qty" optional="hide"/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="name" readonly="1"/>
+                                                <field name="category" readonly="1"/>
+                                                <field name="status"/>
+                                                <field name="is_measurable" invisible="1"/>
+                                            </group>
+                                            <group invisible="not is_measurable">
+                                                <field name="value"/>
+                                                <field name="value_unit" readonly="1"/>
+                                            </group>
+                                        </group>
+                                        <group string="Detalle">
+                                            <field name="notes" nolabel="1" colspan="2"/>
+                                        </group>
+                                        <group string="Foto (obligatoria si el estado es Crítico)">
+                                            <field name="photo" widget="image" nolabel="1"
+                                                   options="{'preview_image': 'photo'}"/>
+                                        </group>
+                                        <group string="Servicio sugerido (opcional)">
+                                            <field name="suggested_service_id"/>
+                                            <field name="suggested_qty"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Conclusiones" name="notes">
+                            <field name="overall_notes" nolabel="1"
+                                   placeholder="Observaciones generales del técnico..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_workshop_inspection_list" model="ir.ui.view">
+        <field name="name">workshop.inspection.list</field>
+        <field name="model">workshop.inspection</field>
+        <field name="arch" type="xml">
+            <list string="Inspecciones">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="sale_order_id"/>
+                <field name="vehicle_id"/>
+                <field name="partner_id"/>
+                <field name="technician_id"/>
+                <field name="count_critical" string="Crítico"/>
+                <field name="count_warning" string="Atención"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'in_progress'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_workshop_inspection" model="ir.actions.act_window">
+        <field name="name">Inspecciones DVI</field>
+        <field name="res_model">workshop.inspection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

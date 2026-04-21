@@ -195,8 +195,27 @@ class SaleOrder(models.Model):
         self._guard_required_fields(
             ["technician_id"],
             _("Asigná un técnico antes de empezar el diagnóstico."))
+        # Crear la inspección DVI con los 44 puntos del template si no existe
+        for o in self:
+            if not o.inspection_id:
+                insp = self.env["workshop.inspection"].create({
+                    "sale_order_id": o.id,
+                    "technician_id": o.technician_id.id,
+                })
+                o.inspection_id = insp.id
         self.write({"workshop_state": "diagnosis"})
         return self._notify_stage_change(_("Diagnóstico iniciado"))
+
+    def action_view_inspection(self):
+        self.ensure_one()
+        if not self.inspection_id:
+            return False
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "workshop.inspection",
+            "res_id": self.inspection_id.id,
+            "view_mode": "form",
+        }
 
     # ─── Presupuestado ───
     def action_workshop_to_quote(self):

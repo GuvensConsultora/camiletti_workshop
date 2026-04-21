@@ -1,6 +1,6 @@
 {
     "name": "Camiletti Taller",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "summary": "Gestión de taller de neumáticos y tren delantero/trasero",
     "description": """
 Taller para NEUMATICOS CAMILETTI SRL.
@@ -24,7 +24,9 @@ recepción telefónica, walk-in directo y walk-in con diagnóstico.
         "security/workshop_security.xml",
         "security/ir.model.access.csv",
         "data/workshop_categ_data.xml",
+        "data/workshop_inspection_template_data.xml",
         "views/workshop_vehicle_views.xml",
+        "views/workshop_inspection_views.xml",
         "views/sale_order_views.xml",
         "views/workshop_menus.xml",
     ],
