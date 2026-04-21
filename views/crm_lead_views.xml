@@ -34,20 +34,25 @@
                 </div>
             </xpath>
 
-            <!-- Bloque vehículo + medida + walk-in arriba -->
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="vehicle_id"
-                       options="{'no_create': False}"
-                       domain="[('partner_id','=?', partner_id)]"
-                       context="{'default_partner_id': partner_id}"/>
-                <field name="license_plate" readonly="1" invisible="not vehicle_id"/>
-                <field name="medida" placeholder="Ej. 185/65 R15 91H"/>
-                <field name="medida_origen" widget="badge"/>
-                <field name="walk_in_directo"/>
-                <field name="es_flota" invisible="1"/>
-                <field name="dvi_id" invisible="1"/>
-                <field name="dvi_event_id" invisible="1"/>
-                <field name="quote_id" invisible="1"/>
+            <!-- Bloque vehículo + medida + walk-in, en un grupo siempre visible
+                 (los grupos lead_partner / oportunity_partner originales están
+                 condicionados a type=='lead' o type=='opportunity', lo que
+                 esconde nuestros campos en la mitad de los casos). -->
+            <xpath expr="//group[@name='opportunity_partner']" position="before">
+                <group name="workshop_vehicle" string="Vehículo y servicio">
+                    <field name="vehicle_id"
+                           options="{'no_create': False}"
+                           domain="[('partner_id','=?', partner_id)]"
+                           context="{'default_partner_id': partner_id}"/>
+                    <field name="license_plate" readonly="1" invisible="not vehicle_id"/>
+                    <field name="medida" placeholder="Ej. 185/65 R15 91H"/>
+                    <field name="medida_origen" widget="badge"/>
+                    <field name="walk_in_directo"/>
+                    <field name="es_flota" invisible="1"/>
+                    <field name="dvi_id" invisible="1"/>
+                    <field name="dvi_event_id" invisible="1"/>
+                    <field name="quote_id" invisible="1"/>
+                </group>
             </xpath>
 
             <!-- Smart button a la cotización armada -->
