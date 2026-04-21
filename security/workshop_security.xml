@@ -6,22 +6,29 @@
         <field name="sequence">45</field>
     </record>
 
+    <!-- Odoo 19: res.groups.category_id fue reemplazado por res.groups.privilege_id -->
+    <record id="privilege_workshop" model="res.groups.privilege">
+        <field name="name">Taller</field>
+        <field name="category_id" ref="module_category_workshop"/>
+        <field name="sequence">45</field>
+    </record>
+
     <record id="group_workshop_reception" model="res.groups">
         <field name="name">Taller / Recepción</field>
-        <field name="category_id" ref="module_category_workshop"/>
+        <field name="privilege_id" ref="privilege_workshop"/>
         <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="comment">Recepcionistas: crean OT, toman datos del vehículo, emiten presupuestos, registran aprobación y cierre con entrega.</field>
     </record>
 
     <record id="group_workshop_technician" model="res.groups">
         <field name="name">Taller / Técnico</field>
-        <field name="category_id" ref="module_category_workshop"/>
+        <field name="privilege_id" ref="privilege_workshop"/>
         <field name="comment">Técnicos: ejecutan diagnóstico y reparación, marcan items terminados, avisan listo.</field>
     </record>
 
     <record id="group_workshop_manager" model="res.groups">
         <field name="name">Taller / Gerente</field>
-        <field name="category_id" ref="module_category_workshop"/>
+        <field name="privilege_id" ref="privilege_workshop"/>
         <field name="implied_ids" eval="[(4, ref('group_workshop_reception')), (4, ref('group_workshop_technician')), (4, ref('sales_team.group_sale_manager'))]"/>
         <field name="comment">Gerente: todos los permisos + puede anular guards con justificación.</field>
     </record>
