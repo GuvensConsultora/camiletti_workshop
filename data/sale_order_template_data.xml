@@ -49,13 +49,4 @@
         <field name="product_uom_qty">4.0</field>
     </record>
 
-    <!-- Opciones (upsell sugerido) -->
-    <record id="sol_opt_alineacion_correctiva" model="sale.order.option">
-        <field name="sale_order_template_id" ref="sale_order_template_compra_colocacion"/>
-        <field name="sequence">10</field>
-        <field name="name">Alineación correctiva tren delantero</field>
-        <field name="product_id" ref="product_alineacion_correctiva"/>
-        <field name="quantity">1.0</field>
-    </record>
-
 </odoo>
