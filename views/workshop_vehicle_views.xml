@@ -136,25 +136,25 @@
         <field name="name">workshop.vehicle.search</field>
         <field name="model">workshop.vehicle</field>
         <field name="arch" type="xml">
-            <search string="Vehículos">
+            <search>
                 <field name="license_plate"/>
                 <field name="partner_id"/>
                 <field name="brand"/>
                 <field name="vehicle_model"/>
                 <field name="vin_sn"/>
-                <filter string="Autos" name="type_auto"
+                <filter name="type_auto" string="Autos"
                         domain="[('vehicle_type','=','auto')]"/>
-                <filter string="Camionetas" name="type_camioneta"
+                <filter name="type_camioneta" string="Camionetas"
                         domain="[('vehicle_type','=','camioneta')]"/>
-                <filter string="Camiones" name="type_camion"
+                <filter name="type_camion" string="Camiones"
                         domain="[('vehicle_type','=','camion')]"/>
                 <separator/>
-                <filter string="Archivados" name="archived"
+                <filter name="archived" string="Archivados"
                         domain="[('active','=',False)]"/>
-                <group expand="0" string="Agrupar por">
-                    <filter string="Cliente" name="group_partner"
+                <group>
+                    <filter name="group_partner" string="Cliente"
                             context="{'group_by': 'partner_id'}"/>
-                    <filter string="Tipo" name="group_type"
+                    <filter name="group_type" string="Tipo"
                             context="{'group_by': 'vehicle_type'}"/>
                 </group>
             </search>
