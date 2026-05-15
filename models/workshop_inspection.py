@@ -105,11 +105,19 @@ class WorkshopInspection(models.Model):
             to_add = r.line_ids.filtered(
                 lambda l: l.status in ("warning", "critical") and l.suggested_service_id)
             for il in to_add:
+                product = il.suggested_service_id
+                # Por qué: el compute store=True de tax_ids en sale.order.line a veces
+                # no dispara en create directo desde código. Lo seteamos manualmente
+                # filtrando product.taxes_id por la cía del SO (multi-cía: cada cía
+                # tiene su propio IVA).
+                applicable_taxes = product.taxes_id.filtered(
+                    lambda t: not t.company_id or t.company_id == r.sale_order_id.company_id)
                 Line.create({
                     "order_id": r.sale_order_id.id,
-                    "product_id": il.suggested_service_id.id,
+                    "product_id": product.id,
                     "product_uom_qty": il.suggested_qty or 1,
-                    "name": f"[{il.name}] {il.suggested_service_id.name}",
+                    "name": f"[{il.name}] {product.name}",
+                    "tax_ids": [(6, 0, applicable_taxes.ids)],
                 })
                 total_added += 1
             r.message_post(body=_(
