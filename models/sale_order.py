@@ -345,6 +345,28 @@ class SaleOrder(models.Model):
                        message, o.workshop_next_action or "—"))
         return True
 
+    def action_confirm(self):
+        today = fields.Date.today()
+        is_manager = self.env.user.has_group('sale.group_sale_manager')
+        for order in self:
+            if order.date_order and order.date_order.date() < today:
+                if not is_manager:
+                    raise UserError(_(
+                        "Solo los gerentes pueden confirmar cotizaciones con fecha anterior a hoy. "
+                        "Comunicate con la gerencia para autorizar."
+                    ))
+        past_dates = {
+            o.id: o.date_order
+            for o in self
+            if o.date_order and o.date_order.date() < today
+        }
+        result = super().action_confirm()
+        if past_dates and is_manager:
+            for order in self.filtered(lambda o: o.id in past_dates):
+                if order.date_order != past_dates[order.id]:
+                    order.write({'date_order': past_dates[order.id]})
+        return result
+
     @api.onchange("vehicle_id")
     def _onchange_vehicle_suggest_defaults(self):
         """Sugiere km, titular como partner/driver/approver por default al elegir vehículo.
