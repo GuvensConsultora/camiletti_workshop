@@ -114,6 +114,21 @@
                 <field name="inspection_id" invisible="1"/>
             </xpath>
 
+            <!-- Fecha de cotización editable en borrador SOLO para gerencia
+                 (backdating). Nativo la oculta en draft/sent y solo la muestra
+                 readonly al confirmar; así el gerente nunca podía cargarla. La
+                 exponemos siempre; editable únicamente si es gerente de ventas
+                 (is_sale_manager) y el presupuesto sigue en borrador/enviado. Al
+                 vendedor le aparece readonly. El candado de fecha pasada vive
+                 además en action_confirm(). -->
+            <xpath expr="//field[@name='workshop_state']" position="after">
+                <field name="is_sale_manager" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="readonly">not is_sale_manager or state not in ('draft', 'sent')</attribute>
+            </xpath>
+
             <!-- Km y técnico junto a las fechas -->
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="km_in" placeholder="Odómetro al recibir"/>
