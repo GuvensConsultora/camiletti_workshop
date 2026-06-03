@@ -1,6 +1,6 @@
 {
     "name": "Camiletti Taller",
-    "version": "19.0.1.6.1",
+    "version": "19.0.1.6.0",
     "summary": "Gestión de taller de neumáticos, tren delantero y flujo de venta CRM",
     "description": """
 Taller para NEUMATICOS CAMILETTI SRL.

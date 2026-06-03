@@ -43,19 +43,6 @@ class SaleOrder(models.Model):
         WORKSHOP_STATES, string="Estado de Taller", default="received",
         tracking=True, copy=False, index=True, group_expand="_group_expand_states")
 
-    # True si el usuario actual es gerente de ventas. Solo gerencia puede editar
-    # la "Fecha de cotización" (date_order) en borrador para backdatear el
-    # presupuesto; al vendedor le aparece readonly. El candado de confirmación
-    # con fecha pasada vive además en action_confirm().
-    is_sale_manager = fields.Boolean(
-        compute="_compute_is_sale_manager", string="Es gerente de ventas")
-
-    @api.depends_context("uid")
-    def _compute_is_sale_manager(self):
-        is_manager = self.env.user.has_group("sale.group_sale_manager")
-        for order in self:
-            order.is_sale_manager = is_manager
-
     # ────── Vehículo y datos de servicio ──────
     vehicle_id = fields.Many2one(
         "workshop.vehicle", string="Vehículo", tracking=True, index=True,
