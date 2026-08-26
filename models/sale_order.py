@@ -347,13 +347,20 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         today = fields.Date.today()
-        is_manager = self.env.user.has_group('sale.group_sale_manager')
+        # El xmlid del grupo es `sales_team.group_sale_manager`; `sale.group_sale_manager`
+        # no existe y `has_group` devuelve False para todos, con lo que el candado
+        # terminaba bloqueando también a gerencia.
+        is_manager = self.env.user.has_group('sales_team.group_sale_manager')
         for order in self:
-            if order.date_order and order.date_order.date() < today:
+            # Backdatear es poner fecha de orden anterior al día en que la cotización
+            # se creó. Que pasen días entre armarla y confirmarla es el flujo normal
+            # de venta y no pide autorización.
+            if (order.date_order and order.create_date
+                    and order.date_order.date() < order.create_date.date()):
                 if not is_manager:
                     raise UserError(_(
-                        "Solo los gerentes pueden confirmar cotizaciones con fecha anterior a hoy. "
-                        "Comunicate con la gerencia para autorizar."
+                        "Solo los gerentes pueden confirmar cotizaciones con fecha "
+                        "backdateada. Comunicate con la gerencia para autorizar."
                     ))
         past_dates = {
             o.id: o.date_order
@@ -361,7 +368,10 @@ class SaleOrder(models.Model):
             if o.date_order and o.date_order.date() < today
         }
         result = super().action_confirm()
-        if past_dates and is_manager:
+        # El nativo pisa `date_order` con la fecha de confirmación: le devolvemos la
+        # original a todos, no sólo a gerencia, para que una cotización confirmada
+        # días después conserve la fecha en que se armó.
+        if past_dates:
             for order in self.filtered(lambda o: o.id in past_dates):
                 if order.date_order != past_dates[order.id]:
                     order.write({'date_order': past_dates[order.id]})
